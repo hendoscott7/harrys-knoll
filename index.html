@@ -379,6 +379,22 @@ body:not(.started) #hud-top > * { pointer-events: none; }
   body.started #joy-ghost { bottom: calc(env(safe-area-inset-bottom, 0px) + 96px); }
   #fresh { bottom: calc(env(safe-area-inset-bottom, 0px) + 92px); }
 }
+
+/* subtler corners */
+.panel { border-radius: 10px; }
+.intro-card { border-radius: 14px !important; }
+.tools button { border-radius: 7px; }
+#tl-exit, #tl-toggle { border-radius: 6px; }
+.pl-art { border-radius: 6px; }
+#start, #done-reset, #fresh-btn { border-radius: 8px; }
+.intro-keys { border-radius: 8px; }
+.intro-stat { border-radius: 8px; }
+#fresh { border-radius: 10px; }
+@media (max-width: 560px) {
+  #top-left { border-radius: 0 0 12px 12px; }
+  #player { border-radius: 12px 12px 0 0; }
+}
+@media (hover: none), (pointer: coarse) { .tools button { border-radius: 8px; } }
 </style>
 
 <canvas id="scene" aria-label="A painted grassy knoll with a hedgehog called Harry"></canvas>
