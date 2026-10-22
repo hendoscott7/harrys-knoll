@@ -362,6 +362,23 @@ body:not(.started) #hud-top > * { pointer-events: none; }
   @keyframes nudge { 0%, 100% { transform: translate(0, 0); } 30% { transform: translate(0, -14px); } 60% { transform: translate(10px, -6px); } }
   @media (prefers-reduced-motion: reduce) { #joy-ghost .dot { animation: none; } }
 }
+
+/* phones: header sheet at the top, player docked at the bottom, edge to edge */
+@media (max-width: 560px) {
+  #hud-top { top: 0; left: 0; right: 0; gap: 0; }
+  body:not(.started) #hud-top { transform: none; }
+  #top-left {
+    width: auto; border-radius: 0 0 22px 22px; border-top: 0;
+    padding: calc(17.4px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) 14px max(16px, env(safe-area-inset-left, 0px));
+  }
+  #top-left.collapsed { height: calc(56px + env(safe-area-inset-top, 0px)); }
+  #player {
+    position: fixed; left: 0; right: 0; bottom: 0; height: auto; border-radius: 22px 22px 0 0; border-bottom: 0;
+    padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  }
+  body.started #joy-ghost { bottom: calc(env(safe-area-inset-bottom, 0px) + 96px); }
+  #fresh { bottom: calc(env(safe-area-inset-bottom, 0px) + 92px); }
+}
 </style>
 
 <canvas id="scene" aria-label="A painted grassy knoll with a hedgehog called Harry"></canvas>
