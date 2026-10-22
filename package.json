@@ -1,0 +1,11 @@
+{
+  "name": "harrys-knoll",
+  "private": true,
+  "description": "A tiny painted world with a hedgehog called Harry.",
+  "scripts": {
+    "build": "html-minifier-terser --collapse-whitespace --conservative-collapse --remove-comments --minify-css true --minify-js '{\"compress\":{\"passes\":2},\"mangle\":true}' -o index.html src/index.html"
+  },
+  "devDependencies": {
+    "html-minifier-terser": "7.2.0"
+  }
+}
