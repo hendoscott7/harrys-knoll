@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <style>
 :root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
 body { margin: 0; font: 14px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; }
@@ -39,6 +39,8 @@ img { max-width: 100%; }
   color-scheme: light;
 }
 html, body { height: 100%; }
+/* no double-tap or pinch zoom: taps go straight to the game */
+html, body, button, .panel, #intro, #done { touch-action: manipulation; -webkit-text-size-adjust: 100%; }
 body {
   background: var(--paper); color: var(--ink); font-family: var(--body);
   overflow: hidden; margin: 0;
@@ -1638,6 +1640,9 @@ addEventListener('blur', () => keys.clear());
 const joyEl = document.getElementById('joy'), knob = document.getElementById('joy-knob');
 let joy = null, look = null;
 const joyVec = { x: 0, y: 0 };
+// iOS ignores user-scalable=no, so stop pinch and double-tap zoom ourselves
+['gesturestart', 'gesturechange', 'gestureend'].forEach(ev => document.addEventListener(ev, e => e.preventDefault(), { passive: false }));
+document.addEventListener('dblclick', e => e.preventDefault(), { passive: false });
 const joyGhost = document.getElementById('joy-ghost');
 try { if (localStorage.getItem('knoll-walked') === '1') joyGhost.classList.add('used'); } catch (e) {}
 canvas.addEventListener('pointerdown', e => {
