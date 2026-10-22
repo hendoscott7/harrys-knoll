@@ -395,6 +395,13 @@ body:not(.started) #hud-top > * { pointer-events: none; }
   #player { border-radius: 12px 12px 0 0; }
 }
 @media (hover: none), (pointer: coarse) { .tools button { border-radius: 8px; } }
+
+/* phones: let the start, pause and finish cards breathe */
+@media (max-width: 560px) {
+  #intro, #done { padding-left: max(28px, env(safe-area-inset-left, 0px)); padding-right: max(28px, env(safe-area-inset-right, 0px)); }
+  .intro-card { padding: 30px 22px 24px; }
+  .intro-keys { padding-inline: 12px; column-gap: 14px; }
+}
 </style>
 
 <canvas id="scene" aria-label="A painted grassy knoll with a hedgehog called Harry"></canvas>
