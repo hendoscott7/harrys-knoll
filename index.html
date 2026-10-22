@@ -1338,7 +1338,6 @@ document.addEventListener('visibilitychange', () => {
   if (!document.hidden && window.__silentAudio) window.__silentAudio.play().catch(() => {});
 });
 function ensureAudio() {
-  unlockMobileAudio();
   try {
     if (actx && actx.state !== 'running' && soundOn) actx.resume().catch(() => {});
     if (!actx) {
@@ -1358,7 +1357,6 @@ function ensureAudio() {
       const rs = actx.createBufferSource(); rs.buffer = buf; rs.loop = true; rs.playbackRate.value = 0.8;
       const rb = actx.createBiquadFilter(); rb.type = 'bandpass'; rb.frequency.value = 1500; rb.Q.value = 0.5;
       rs.connect(rb).connect(rainGain).connect(sfxBus); rs.start();
-      music.on = true; startMusic();
       loadGiggle();
     } else if (actx.state === 'suspended' && soundOn) actx.resume();
   } catch (e) { actx = null; }
@@ -1449,6 +1447,7 @@ function goTrack(i) {
   showTrack(); seekChord(0);
 }
 function setMusic(on) {
+  if (on) unlockMobileAudio();
   if (!on) music.pausedAt = elapsed();
   music.on = on;
   ensureAudio();
