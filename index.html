@@ -1316,8 +1316,30 @@ function updatePlayer() {
 }
 setInterval(updatePlayer, 250);
 
+// iPhones mute Web Audio when the ring/silent switch is on. Asking for 'playback' (or playing a
+// silent <audio> loop from the tap) moves the page into the media channel, like a video would.
+let iosUnlocked = false;
+function unlockMobileAudio() {
+  if (iosUnlocked) return; iosUnlocked = true;
+  try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+  try {
+    const sr = 8000, n = sr / 4, buf = new ArrayBuffer(44 + n * 2), v = new DataView(buf);
+    const w = (o, str) => { for (let i = 0; i < str.length; i++) v.setUint8(o + i, str.charCodeAt(i)); };
+    w(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); w(8, 'WAVE'); w(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+    v.setUint32(24, sr, true); v.setUint32(28, sr * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, n * 2, true);
+    const el = new Audio(URL.createObjectURL(new Blob([buf], { type: 'audio/wav' })));
+    el.loop = true; el.setAttribute('playsinline', ''); el.volume = 0.01;
+    const pr = el.play(); if (pr && pr.catch) pr.catch(() => {});
+    window.__silentAudio = el;
+  } catch (e) {}
+}
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && actx && actx.state !== 'running' && soundOn) actx.resume().catch(() => {});
+  if (!document.hidden && window.__silentAudio) window.__silentAudio.play().catch(() => {});
+});
 function ensureAudio() {
   try {
+    if (actx && actx.state !== 'running' && soundOn) actx.resume().catch(() => {});
     if (!actx) {
       actx = new (window.AudioContext || window.webkitAudioContext)();
       master = actx.createGain(); master.gain.value = soundOn ? 1 : 0;
@@ -1335,7 +1357,6 @@ function ensureAudio() {
       const rs = actx.createBufferSource(); rs.buffer = buf; rs.loop = true; rs.playbackRate.value = 0.8;
       const rb = actx.createBiquadFilter(); rb.type = 'bandpass'; rb.frequency.value = 1500; rb.Q.value = 0.5;
       rs.connect(rb).connect(rainGain).connect(sfxBus); rs.start();
-      music.on = true; startMusic();
       loadGiggle();
     } else if (actx.state === 'suspended' && soundOn) actx.resume();
   } catch (e) { actx = null; }
@@ -1426,6 +1447,7 @@ function goTrack(i) {
   showTrack(); seekChord(0);
 }
 function setMusic(on) {
+  if (on) unlockMobileAudio();
   if (!on) music.pausedAt = elapsed();
   music.on = on;
   ensureAudio();
