@@ -1358,6 +1358,7 @@ document.addEventListener('visibilitychange', () => {
   if (!document.hidden && window.__silentAudio) window.__silentAudio.play().catch(() => {});
 });
 function ensureAudio() {
+  unlockMobileAudio();
   try {
     if (actx && actx.state !== 'running' && soundOn) actx.resume().catch(() => {});
     if (!actx) {
