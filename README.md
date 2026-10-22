@@ -26,6 +26,17 @@ On a phone: hold the lower left to walk, drag to turn, tap Harry to pet him.
 - Each real-world week brings a new season.
 - Finish the lawn for a small celebration.
 
+## Editing
+
+The readable source is `src/index.html`. The live site serves a minified `index.html` built from it:
+
+```
+npm install
+npm run build
+```
+
+Edit `src/index.html`, run the build, and commit both files. The giggle lives in `giggle.mp3` and loads after you step outside.
+
 ## Built with
 
 One HTML file: [three.js](https://threejs.org/) r128, a hand-written painterly post-process, and Web Audio for the music. Giggle sound from the Freesound community.
